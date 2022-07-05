@@ -252,13 +252,12 @@ MonoBehaviour:
   xSize: 5
   ySize: 15
   ballPrefab: {fileID: 7926752739332323396, guid: d5ca6681b07d3ae459bbf614ccfdb124, type: 3}
-  ballColors:
-  - {r: 1, g: 0, b: 0, a: 1}
-  - {r: 0, g: 1, b: 0, a: 1}
-  - {r: 0, g: 0, b: 1, a: 1}
-  - {r: 1, g: 0, b: 1, a: 1}
-  - {r: 0, g: 1, b: 1, a: 1}
-  - {r: 1, g: 1, b: 0, a: 1}
+  ballSprites:
+  - {fileID: -5631156788377735482, guid: 34b2643ca52bc6b428585400b42ee156, type: 3}
+  - {fileID: -2227334624769414652, guid: 34b2643ca52bc6b428585400b42ee156, type: 3}
+  - {fileID: 3704678035012771462, guid: 34b2643ca52bc6b428585400b42ee156, type: 3}
+  - {fileID: -120627282722031859, guid: 34b2643ca52bc6b428585400b42ee156, type: 3}
+  - {fileID: -7191423501990630808, guid: 34b2643ca52bc6b428585400b42ee156, type: 3}
 --- !u!1 &1762183488
 GameObject:
   m_ObjectHideFlags: 0

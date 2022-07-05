@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-    public SpriteRenderer sprite;
+    public SpriteRenderer spriteRenderer;
     public Vector2 size;
     public bool isSelected;
-    public bool isEmpty => sprite == null;
+    public bool isEmpty => spriteRenderer == null;
 
     // Start is called before the first frame update
     void Start()

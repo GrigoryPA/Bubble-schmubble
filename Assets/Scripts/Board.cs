@@ -6,7 +6,7 @@ public class Board : MonoBehaviour
 {
     public int xSize = 2, ySize = 2;
     public Ball ballPrefab;
-    public List<Color> ballColors;
+    public List<Sprite> ballSprites;
 
     public void CreateBoard()
     {
@@ -23,20 +23,20 @@ public class Board : MonoBehaviour
                 Ball newBall = Instantiate(ballPrefab, iPos, Quaternion.identity, transform);
                 ballsArray[i, j] = newBall;
 
-                List<Color> colorsPool = new List<Color>();
-                colorsPool.AddRange(ballColors);
+                List<Sprite> spritesPool = new List<Sprite>();
+                spritesPool.AddRange(ballSprites);
                 //исключаем повтор€ющиес€ цвета по горизонтали и вертикали (не более двух подр€д)
-                if (i > 1 && ballsArray[i - 1, j].sprite.color == ballsArray[i - 2, j].sprite.color)
+                if (i > 1 && ballsArray[i - 1, j].spriteRenderer.sprite == ballsArray[i - 2, j].spriteRenderer.sprite)
                 {
-                    colorsPool.Remove(ballsArray[i - 1, j].sprite.color);
+                    spritesPool.Remove(ballsArray[i - 1, j].spriteRenderer.sprite);
                 }
-                if (j > 1 && ballsArray[i, j - 1].sprite.color == ballsArray[i, j - 2].sprite.color)
+                if (j > 1 && ballsArray[i, j - 1].spriteRenderer.sprite == ballsArray[i, j - 2].spriteRenderer.sprite)
                 {
-                    colorsPool.Remove(ballsArray[i, j - 1].sprite.color);
+                    spritesPool.Remove(ballsArray[i, j - 1].spriteRenderer.sprite);
                 }
 
                 //рандомим цвет из поулченного пула цветов
-                newBall.sprite.color = colorsPool[Random.Range(0, colorsPool.Count)];
+                newBall.spriteRenderer.sprite = spritesPool[Random.Range(0, spritesPool.Count)];
             }
         }
     }
