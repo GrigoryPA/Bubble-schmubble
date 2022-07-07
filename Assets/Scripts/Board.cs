@@ -4,16 +4,20 @@ using UnityEngine;
 
 public class Board : MonoBehaviour
 {
+    public bool hardRandomMode = false;
+    public LayerMask ballsLayerMask;
     public int xSize = 2, ySize = 2;
     public Ball ballPrefab;
     public List<Sprite> ballSprites;
 
     public bool isShifting = false;
+    public bool isSearchEmptyBall = false;
     public Ball selectedBall;
     public List<Ball> adjacentBalls;
-    private static readonly Vector2[] dirRay = new Vector2[4] { Vector2.up, Vector2.down, Vector2.right, Vector2.left };
+
+    private static readonly Vector2[] dirRaySwap = new Vector2[4] { Vector2.up, Vector2.down, Vector2.right, Vector2.left };
+    private static readonly Vector2[] dirRayMatch = new Vector2[4] { Vector2.up, Vector2.down, Vector2.right, Vector2.left };
     private Ball[,] ballsArray;
-    public bool isSearchEmptyBall = false;
 
 
     public void CreateBoard()
@@ -27,7 +31,7 @@ public class Board : MonoBehaviour
         {
             for (int j = 0; j < ySize; j++)
             {
-                iPos = centerPos + new Vector3(ballSize.x * i, ballSize.y * j, 0);
+                iPos = centerPos + new Vector3(ballSize.x * i, ballSize.y * j, 0) + ballSize*0.5f;
                 Ball newBall = Instantiate(ballPrefab, iPos, Quaternion.identity, transform);
                 ballsArray[i, j] = newBall;
 
@@ -49,6 +53,91 @@ public class Board : MonoBehaviour
         }
     }
 
+    public void BlowUpBall(Ball ball)
+    {
+        //1. Составить список шаров совпадений
+        List<Ball> matchBalls = new List<Ball>();
+        FindAllMatch(ball, ref matchBalls);
+
+        //2. Переместить на места шаров из списка объекты с анимацией взрыва
+
+        //3. Переместить шары из списка на верх столбца в массиве шаров и телепортировать их наверх столбца
+        TeleportUpBallsMatch();
+
+        //5. Задать новые спрайты шарам из списка (чистый рандом / без совпадений)
+        UpdateSpritesBallsMatch();
+    }
+
+    private void TeleportUpBallsMatch()
+    {
+        for (int i = 0; i < xSize; i++)
+        {
+            for (int j = 0; j < ySize; j++)
+            {
+                if (ballsArray[i, j].isMoving)
+                {
+                    Ball bufBall = ballsArray[i, j];
+                    for (int q = j; q < ySize - 1; q++)
+                    {
+                        ballsArray[i, q] = ballsArray[i, q + 1];
+                    }
+                    bufBall.isMoving = false;
+                    bufBall.isNeedNewSprite = true;
+                    bufBall.transform.position += Vector3.up * ySize * ballPrefab.size.y;
+                    ballsArray[i, ySize - 1] = bufBall;
+                    i--;
+                    break;
+                }
+            }
+        }
+    }
+
+    private void UpdateSpritesBallsMatch()
+    {
+        for (int i = 0; i < xSize; i++)
+        {
+            for (int j = 0; j < ySize; j++)
+            {
+                if (ballsArray[i, j].isNeedNewSprite)
+                {
+                    ballsArray[i, j].spriteRenderer.sprite = GetNewSprite(i, j);
+                    ballsArray[i, j].isNeedNewSprite = false;
+                }
+            }
+        }
+    }
+
+    private void FindAllMatch(Ball ball, ref List<Ball> matchBalls)
+    {
+        //1. На первой позиции списка главный шар
+        ball.isMoving = true;
+        matchBalls.Add(ball);
+
+        //2. Ищем совпадения по всем направлениям и добавляем в список
+        for (int i = 0; i < dirRayMatch.Length; i++)
+        {
+            matchBalls.AddRange(FindMatch(ball, dirRayMatch[i]));
+        }
+    }
+
+    private List<Ball> FindMatch(Ball ball, Vector2 dir)
+    {
+        List<Ball> matchList = new List<Ball>();
+        Ball bufBall;
+
+        RaycastHit2D hit = Physics2D.Raycast(ball.transform.position, dir, ballPrefab.size.x, ballsLayerMask);
+        //если каст удался и спрайты шаров совпадают
+        while (hit != false && (bufBall = hit.collider.GetComponent<Ball>()).spriteRenderer.sprite == ball.spriteRenderer.sprite)
+        {
+            bufBall.isMoving = true;
+            matchList.Add(bufBall);//добавляем в список совпадений
+            hit = Physics2D.Raycast(hit.collider.transform.position, dir, ballPrefab.size.x, ballsLayerMask);//кастуем из текущего шара дальше по направлению
+        }
+
+        return matchList;
+    }
+
+    #region("РЕЖИМ SWAP: смена местами шаров, выделение шара, убрать выделение шара, поиск соседей для обмена")
     public void SwapTwoBall(Ball ball1, Ball ball2)
     {
         if (ball1.spriteRenderer.sprite == ball2.spriteRenderer.sprite)
@@ -83,9 +172,9 @@ public class Board : MonoBehaviour
     {
         List<Ball> neighbors = new List<Ball>(4);
 
-        for (int i = 0; i < dirRay.Length; i++)
+        for (int i = 0; i < dirRaySwap.Length; i++)
         {
-            RaycastHit2D hit = Physics2D.Raycast(ball.transform.position, dirRay[i]);
+            RaycastHit2D hit = Physics2D.Raycast(ball.transform.position, dirRaySwap[i]);
             if (hit != false)
             {
                 neighbors.Add(hit.collider.gameObject.GetComponent<Ball>());
@@ -94,21 +183,10 @@ public class Board : MonoBehaviour
 
         return neighbors;
     }
+    #endregion
 
-    private List<Ball> FindMatch(Ball ball, Vector2 dir)
-    {
-        List<Ball> matchList = new List<Ball>();
-        Ball bufBall;
+    #region("Поиск совпадения, удаление шаров, поиск всех совпадений по всем направлениям")
 
-        RaycastHit2D hit = Physics2D.Raycast(ball.transform.position, dir);
-        while (hit != false && (bufBall = hit.collider.GetComponent<Ball>()).spriteRenderer.sprite == ball.spriteRenderer.sprite)
-        {
-            matchList.Add(bufBall);
-            hit = Physics2D.Raycast(hit.collider.transform.position, dir);
-        }
-
-        return matchList;
-    }
 
     private bool DeleteBalls(Ball ball, Vector2[] dirArray)
     {
@@ -130,7 +208,7 @@ public class Board : MonoBehaviour
         return false;
     }
 
-    public void FindAllMatch(Ball ball)
+    public void DeleteAllMatch(Ball ball)
     {
         if (ball.isEmpty)
         {
@@ -146,7 +224,9 @@ public class Board : MonoBehaviour
             }
         }
     }
+    #endregion
 
+    #region("Поиск пустых шаров, сдвиг шаров, установка новых спрайтов, генерация спрайта")
     public void SearchEmptyBalls()
     {
         //isShifting = true;
@@ -162,13 +242,13 @@ public class Board : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < xSize; i++)
+        /*for (int i = 0; i < xSize; i++)
         {
             for (int j = 0; j < ySize; j++)
             {
                 FindAllMatch(ballsArray[i, j]);
             }
-        }
+        }*/
         //isShifting = false;
         //isSearchEmptyBall = false;
     }
@@ -197,22 +277,30 @@ public class Board : MonoBehaviour
 
     private Sprite GetNewSprite(int iPos, int jPos)
     {
-        List<Sprite> spritesPool = new List<Sprite>();
-        spritesPool.AddRange(ballSprites);
+        if (hardRandomMode)
+        {
+            List<Sprite> spritesPool = new List<Sprite>();
+            spritesPool.AddRange(ballSprites);
 
-        if (iPos > 0)
-        {
-            spritesPool.Remove(ballsArray[iPos - 1, jPos].spriteRenderer.sprite);
-        }
-        if (iPos < xSize - 1)
-        {
-            spritesPool.Remove(ballsArray[iPos + 1, jPos].spriteRenderer.sprite);
-        }
-        if (jPos > 0)
-        {
-            spritesPool.Remove(ballsArray[iPos, jPos - 1].spriteRenderer.sprite);
-        }
+            if (iPos > 0)
+            {
+                spritesPool.Remove(ballsArray[iPos - 1, jPos].spriteRenderer.sprite);
+            }
+            if (iPos < xSize - 1)
+            {
+                spritesPool.Remove(ballsArray[iPos + 1, jPos].spriteRenderer.sprite);
+            }
+            if (jPos > 0)
+            {
+                spritesPool.Remove(ballsArray[iPos, jPos - 1].spriteRenderer.sprite);
+            }
 
-        return spritesPool[Random.Range(0, spritesPool.Count)];
+            return spritesPool[Random.Range(0, spritesPool.Count)];
+        }
+        else 
+        {
+            return ballSprites[Random.Range(0, ballSprites.Count)];
+        }
     }
+    #endregion
 }

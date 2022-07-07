@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameController : MonoBehaviour
 {
     public Board board;
-    public bool BUTTON_UPDATE = false;
+    public bool swapMode = false;
 
 
 
@@ -17,17 +17,9 @@ public class GameController : MonoBehaviour
 
     private void Update()
     {
-        if (BUTTON_UPDATE)
-        {
-            BUTTON_UPDATE = !BUTTON_UPDATE;
-            board.CreateBoard();
-        }
-
-        board.SearchEmptyBalls();
-
         if (Input.GetMouseButtonDown(0))
         {
-            RaycastHit2D hit = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(Input.mousePosition));
+            RaycastHit2D hit = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(Input.mousePosition), 15, board.ballsLayerMask) ;
             if (hit != false)
             {
                 InteractionWithBall(hit.collider.gameObject.GetComponent<Ball>());
@@ -37,35 +29,44 @@ public class GameController : MonoBehaviour
 
     private void InteractionWithBall(Ball ball)
     {
-        if (ball.isEmpty || board.isShifting)
+        if (ball.isEmpty)
         {
             return;
         }
         else
         {
-            if (ball.isSelected)
+            if (!swapMode)
             {
-                board.DeselectBall(ball);
+                //режим игры BLOWUP
+                board.BlowUpBall(ball);
             }
             else
             {
-                if (board.selectedBall == null)
+                //режим игры SWAP 
+                if (ball.isSelected)
                 {
-                    board.SelectBall(ball);
+                    board.DeselectBall(ball);
                 }
                 else
                 {
-                    if (board.adjacentBalls.Contains(ball))
+                    if (board.selectedBall == null)
                     {
-                        board.SwapTwoBall(board.selectedBall, ball);
-                        board.FindAllMatch(board.selectedBall);
-                        board.FindAllMatch(ball);
-                        board.DeselectBall(board.selectedBall);
+                        board.SelectBall(ball);
                     }
                     else
                     {
-                        board.DeselectBall(board.selectedBall);
-                        board.SelectBall(ball);
+                        if (board.adjacentBalls.Contains(ball))
+                        {
+                            board.SwapTwoBall(board.selectedBall, ball);
+                            //board.FindAllMatch(board.selectedBall);
+                            //board.FindAllMatch(ball);
+                            board.DeselectBall(board.selectedBall);
+                        }
+                        else
+                        {
+                            board.DeselectBall(board.selectedBall);
+                            board.SelectBall(ball);
+                        }
                     }
                 }
             }
