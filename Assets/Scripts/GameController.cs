@@ -29,44 +29,37 @@ public class GameController : MonoBehaviour
 
     private void InteractionWithBall(Ball ball)
     {
-        if (ball.isEmpty)
+        if (!swapMode)
         {
-            return;
+            //режим игры BLOWUP
+            board.BlowUpBall(ball);
         }
         else
         {
-            if (!swapMode)
+            //режим игры SWAP 
+            if (ball.isSelected)
             {
-                //режим игры BLOWUP
-                board.BlowUpBall(ball);
+                board.DeselectBall(ball);
             }
             else
             {
-                //режим игры SWAP 
-                if (ball.isSelected)
+                if (board.selectedBall == null)
                 {
-                    board.DeselectBall(ball);
+                    board.SelectBall(ball);
                 }
                 else
                 {
-                    if (board.selectedBall == null)
+                    if (board.adjacentBalls.Contains(ball))
                     {
-                        board.SelectBall(ball);
+                        board.SwapTwoBall(board.selectedBall, ball);
+                        //board.FindAllMatch(board.selectedBall);
+                        //board.FindAllMatch(ball);
+                        board.DeselectBall(board.selectedBall);
                     }
                     else
                     {
-                        if (board.adjacentBalls.Contains(ball))
-                        {
-                            board.SwapTwoBall(board.selectedBall, ball);
-                            //board.FindAllMatch(board.selectedBall);
-                            //board.FindAllMatch(ball);
-                            board.DeselectBall(board.selectedBall);
-                        }
-                        else
-                        {
-                            board.DeselectBall(board.selectedBall);
-                            board.SelectBall(ball);
-                        }
+                        board.DeselectBall(board.selectedBall);
+                        board.SelectBall(ball);
                     }
                 }
             }

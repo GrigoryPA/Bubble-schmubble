@@ -249,11 +249,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5c93e9621850104b9b1be887b5d3ecf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hardRandomMode: 0
   ballsLayerMask:
     serializedVersion: 2
     m_Bits: 8
   xSize: 5
   ySize: 15
+  explosionPrefab: {fileID: 3486737799247195954, guid: ba6da599785a784449f9dfa228876e60, type: 3}
   ballPrefab: {fileID: 7926752739332323396, guid: d5ca6681b07d3ae459bbf614ccfdb124, type: 3}
   ballSprites:
   - {fileID: -5631156788377735482, guid: 34b2643ca52bc6b428585400b42ee156, type: 3}
@@ -261,8 +263,6 @@ MonoBehaviour:
   - {fileID: 3704678035012771462, guid: 34b2643ca52bc6b428585400b42ee156, type: 3}
   - {fileID: -120627282722031859, guid: 34b2643ca52bc6b428585400b42ee156, type: 3}
   - {fileID: -7191423501990630808, guid: 34b2643ca52bc6b428585400b42ee156, type: 3}
-  isShifting: 0
-  isSearchEmptyBall: 0
   selectedBall: {fileID: 0}
   adjacentBalls: []
 --- !u!1 &1670406330
@@ -368,8 +368,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1670406330}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -4.3, z: 0}
-  m_LocalScale: {x: 6, y: 0.6, z: 1}
+  m_LocalPosition: {x: 0, y: -9, z: 0}
+  m_LocalScale: {x: 6, y: 10, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3

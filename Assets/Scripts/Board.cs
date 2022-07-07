@@ -4,28 +4,31 @@ using UnityEngine;
 
 public class Board : MonoBehaviour
 {
-    public bool hardRandomMode = false;
+    public bool hardRandomMode = true;
     public LayerMask ballsLayerMask;
     public int xSize = 2, ySize = 2;
+    public GameObject explosionPrefab;
     public Ball ballPrefab;
     public List<Sprite> ballSprites;
 
-    public bool isShifting = false;
-    public bool isSearchEmptyBall = false;
+    [HideInInspector]
     public Ball selectedBall;
+    [HideInInspector]
     public List<Ball> adjacentBalls;
 
     private static readonly Vector2[] dirRaySwap = new Vector2[4] { Vector2.up, Vector2.down, Vector2.right, Vector2.left };
     private static readonly Vector2[] dirRayMatch = new Vector2[4] { Vector2.up, Vector2.down, Vector2.right, Vector2.left };
     private Ball[,] ballsArray;
+    private Queue<Animator> explosionQueue;
 
 
     public void CreateBoard()
     {
         ballsArray = new Ball[xSize, ySize];
+        explosionQueue = new Queue<Animator>(xSize * ySize);
         Vector3 centerPos = transform.position;
         Vector3 ballSize = ballPrefab.size;
-
+        
         Vector2 iPos;
         for (int i = 0; i < xSize; i++)
         {
@@ -34,6 +37,7 @@ public class Board : MonoBehaviour
                 iPos = centerPos + new Vector3(ballSize.x * i, ballSize.y * j, 0) + ballSize*0.5f;
                 Ball newBall = Instantiate(ballPrefab, iPos, Quaternion.identity, transform);
                 ballsArray[i, j] = newBall;
+                explosionQueue.Enqueue(Instantiate(explosionPrefab).GetComponent<Animator>());
 
                 List<Sprite> spritesPool = new List<Sprite>();
                 spritesPool.AddRange(ballSprites);
@@ -56,59 +60,59 @@ public class Board : MonoBehaviour
     public void BlowUpBall(Ball ball)
     {
         //1. Составить список шаров совпадений
-        List<Ball> matchBalls = new List<Ball>();
-        FindAllMatch(ball, ref matchBalls);
+        FindAllMatch(ball);
 
         //2. Переместить на места шаров из списка объекты с анимацией взрыва
 
         //3. Переместить шары из списка на верх столбца в массиве шаров и телепортировать их наверх столбца
         TeleportUpBallsMatch();
-
-        //5. Задать новые спрайты шарам из списка (чистый рандом / без совпадений)
-        UpdateSpritesBallsMatch();
     }
 
     private void TeleportUpBallsMatch()
     {
+
         for (int i = 0; i < xSize; i++)
         {
-            for (int j = 0; j < ySize; j++)
+            int countMoving = 0;
+
+            for (int j = 0; j < ySize - countMoving; j++)
             {
                 if (ballsArray[i, j].isMoving)
                 {
+                    //перемещаем взрыв и запускаем анимацию
+                    Animator explosion = explosionQueue.Dequeue();
+                    explosion.transform.position = ballsArray[i, j].transform.position;
+                    explosion.SetTrigger("Enable");
+                    explosionQueue.Enqueue(explosion);
+
                     Ball bufBall = ballsArray[i, j];
                     for (int q = j; q < ySize - 1; q++)
                     {
                         ballsArray[i, q] = ballsArray[i, q + 1];
                     }
+
                     bufBall.isMoving = false;
                     bufBall.isNeedNewSprite = true;
                     bufBall.transform.position += Vector3.up * ySize * ballPrefab.size.y;
                     ballsArray[i, ySize - 1] = bufBall;
-                    i--;
-                    break;
+
+                    countMoving++;
+                    j -= 1;
                 }
             }
-        }
-    }
 
-    private void UpdateSpritesBallsMatch()
-    {
-        for (int i = 0; i < xSize; i++)
-        {
-            for (int j = 0; j < ySize; j++)
+            //Если в столбце были сдвиги - задать новые спрайты этим шарам
+            if (countMoving > 0)
             {
-                if (ballsArray[i, j].isNeedNewSprite)
-                {
-                    ballsArray[i, j].spriteRenderer.sprite = GetNewSprite(i, j);
-                    ballsArray[i, j].isNeedNewSprite = false;
-                }
+                UpdateSpritesBallsMatch(i);
             }
         }
     }
 
-    private void FindAllMatch(Ball ball, ref List<Ball> matchBalls)
+    private void FindAllMatch(Ball ball)
     {
+        List<Ball> matchBalls = new List<Ball>();
+
         //1. На первой позиции списка главный шар
         ball.isMoving = true;
         matchBalls.Add(ball);
@@ -135,6 +139,49 @@ public class Board : MonoBehaviour
         }
 
         return matchList;
+    }
+
+    private void UpdateSpritesBallsMatch(int column)
+    {
+        //находим в указанном столбце шары, требующие нового спрайта
+        for (int j = 0; j < ySize; j++)
+        {
+            if (ballsArray[column, j].isNeedNewSprite)
+            {
+                //генерим спрайт
+                ballsArray[column, j].spriteRenderer.sprite = GetNewSprite(column, j);
+                ballsArray[column, j].isNeedNewSprite = false;
+            }
+        }
+    }
+
+    private Sprite GetNewSprite(int iPos, int jPos)
+    {
+        //(чистый рандом / без совпадений)
+        if (hardRandomMode)
+        {
+            List<Sprite> spritesPool = new List<Sprite>();
+            spritesPool.AddRange(ballSprites);
+
+            if (iPos > 0)
+            {
+                spritesPool.Remove(ballsArray[iPos - 1, jPos].spriteRenderer.sprite);
+            }
+            if (iPos < xSize - 1)
+            {
+                spritesPool.Remove(ballsArray[iPos + 1, jPos].spriteRenderer.sprite);
+            }
+            if (jPos > 0)
+            {
+                spritesPool.Remove(ballsArray[iPos, jPos - 1].spriteRenderer.sprite);
+            }
+
+            return spritesPool[Random.Range(0, spritesPool.Count)];
+        }
+        else
+        {
+            return ballSprites[Random.Range(0, ballSprites.Count)];
+        }
     }
 
     #region("РЕЖИМ SWAP: смена местами шаров, выделение шара, убрать выделение шара, поиск соседей для обмена")
@@ -182,125 +229,6 @@ public class Board : MonoBehaviour
         }
 
         return neighbors;
-    }
-    #endregion
-
-    #region("Поиск совпадения, удаление шаров, поиск всех совпадений по всем направлениям")
-
-
-    private bool DeleteBalls(Ball ball, Vector2[] dirArray)
-    {
-        List<Ball> deletingBalls = new List<Ball>();
-        for (int i = 0; i < dirArray.Length; i++)
-        {
-            deletingBalls.AddRange(FindMatch(ball, dirArray[i]));
-        }
-
-        if (deletingBalls.Count >= 2)
-        {
-            foreach (Ball delBall in deletingBalls)
-            {
-                delBall.spriteRenderer.sprite = null;
-            }
-            return true;
-        }
-
-        return false;
-    }
-
-    public void DeleteAllMatch(Ball ball)
-    {
-        if (ball.isEmpty)
-        {
-            return;
-        }
-        else
-        {
-            if (DeleteBalls(ball, new Vector2[2] { Vector2.up, Vector2.down })
-                || DeleteBalls(ball, new Vector2[2] { Vector2.right, Vector2.left }))
-            {
-                ball.spriteRenderer.sprite = null;
-                isSearchEmptyBall = true;
-            }
-        }
-    }
-    #endregion
-
-    #region("Поиск пустых шаров, сдвиг шаров, установка новых спрайтов, генерация спрайта")
-    public void SearchEmptyBalls()
-    {
-        //isShifting = true;
-        for (int i = 0; i < xSize; i++)
-        {
-            for (int j = 0; j < ySize; j++)
-            {
-                if (ballsArray[i, j].isEmpty)
-                {
-                    ShiftBallDown(i, j);
-                    break;
-                }
-            }
-        }
-
-        /*for (int i = 0; i < xSize; i++)
-        {
-            for (int j = 0; j < ySize; j++)
-            {
-                FindAllMatch(ballsArray[i, j]);
-            }
-        }*/
-        //isShifting = false;
-        //isSearchEmptyBall = false;
-    }
-
-    private void ShiftBallDown(int iPos, int jPos)
-    {
-        List<SpriteRenderer> bufRen = new List<SpriteRenderer>();
-        for (int j = jPos; j < ySize; j++)
-        {
-            if (ballsArray[iPos, j].isEmpty)
-            {
-                bufRen.Add(ballsArray[iPos, j].spriteRenderer);
-            }
-        }
-        SetNewSprite(iPos, bufRen);
-    }
-
-    private void SetNewSprite(int iPos, List<SpriteRenderer> bufRen)
-    {
-        for (int j = 0; j < bufRen.Count - 1; j++)
-        {
-            bufRen[j].sprite = bufRen[j + 1].sprite;
-            bufRen[j + 1].sprite = GetNewSprite(iPos, ySize - 1);
-        }
-    }
-
-    private Sprite GetNewSprite(int iPos, int jPos)
-    {
-        if (hardRandomMode)
-        {
-            List<Sprite> spritesPool = new List<Sprite>();
-            spritesPool.AddRange(ballSprites);
-
-            if (iPos > 0)
-            {
-                spritesPool.Remove(ballsArray[iPos - 1, jPos].spriteRenderer.sprite);
-            }
-            if (iPos < xSize - 1)
-            {
-                spritesPool.Remove(ballsArray[iPos + 1, jPos].spriteRenderer.sprite);
-            }
-            if (jPos > 0)
-            {
-                spritesPool.Remove(ballsArray[iPos, jPos - 1].spriteRenderer.sprite);
-            }
-
-            return spritesPool[Random.Range(0, spritesPool.Count)];
-        }
-        else 
-        {
-            return ballSprites[Random.Range(0, ballSprites.Count)];
-        }
     }
     #endregion
 }

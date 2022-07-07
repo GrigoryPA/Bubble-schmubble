@@ -5,9 +5,17 @@ using UnityEngine;
 public class Ball : MonoBehaviour
 {
     public SpriteRenderer spriteRenderer;
-    public Vector2 size;
+    [HideInInspector]
     public bool isSelected;
-    public bool isEmpty => spriteRenderer.sprite == null;
+    [HideInInspector]
     public bool isMoving = false;
+    [HideInInspector]
     public bool isNeedNewSprite = false;
+    [HideInInspector]
+    public Vector2 size;
+
+    private void Awake()
+    {
+        size = GetComponent<BoxCollider2D>().size;
+    }
 }
