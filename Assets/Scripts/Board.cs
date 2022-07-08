@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Board : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class Board : MonoBehaviour
     public GameObject explosionPrefab;
     public Ball ballPrefab;
     public List<Sprite> ballSprites;
+    public UnityEvent<int> onMatchEvent;
 
     [HideInInspector]
     public Ball selectedBall;
@@ -19,13 +21,12 @@ public class Board : MonoBehaviour
     private static readonly Vector2[] dirRaySwap = new Vector2[4] { Vector2.up, Vector2.down, Vector2.right, Vector2.left };
     private static readonly Vector2[] dirRayMatch = new Vector2[4] { Vector2.up, Vector2.down, Vector2.right, Vector2.left };
     private Ball[,] ballsArray;
-    private Queue<Animator> explosionQueue;
-
+    private Queue<Explosion> explosionQueue;
 
     public void CreateBoard()
     {
         ballsArray = new Ball[xSize, ySize];
-        explosionQueue = new Queue<Animator>(xSize * ySize);
+        explosionQueue = new Queue<Explosion>(xSize * ySize);
         Vector3 centerPos = transform.position;
         Vector3 ballSize = ballPrefab.size;
         
@@ -37,7 +38,7 @@ public class Board : MonoBehaviour
                 iPos = centerPos + new Vector3(ballSize.x * i, ballSize.y * j, 0) + ballSize*0.5f;
                 Ball newBall = Instantiate(ballPrefab, iPos, Quaternion.identity, transform);
                 ballsArray[i, j] = newBall;
-                explosionQueue.Enqueue(Instantiate(explosionPrefab).GetComponent<Animator>());
+                explosionQueue.Enqueue(Instantiate(explosionPrefab).GetComponent<Explosion>());
 
                 List<Sprite> spritesPool = new List<Sprite>();
                 spritesPool.AddRange(ballSprites);
@@ -60,9 +61,10 @@ public class Board : MonoBehaviour
     public void BlowUpBall(Ball ball)
     {
         //1. Составить список шаров совпадений
-        FindAllMatch(ball);
+        int countMatch = FindAllMatch(ball);
 
-        //2. Переместить на места шаров из списка объекты с анимацией взрыва
+        //2. Запускаем событие на получение очков
+        onMatchEvent.Invoke(countMatch);
 
         //3. Переместить шары из списка на верх столбца в массиве шаров и телепортировать их наверх столбца
         TeleportUpBallsMatch();
@@ -79,13 +81,13 @@ public class Board : MonoBehaviour
             {
                 if (ballsArray[i, j].isMoving)
                 {
+                    Ball bufBall = ballsArray[i, j];
+
                     //перемещаем взрыв и запускаем анимацию
-                    Animator explosion = explosionQueue.Dequeue();
-                    explosion.transform.position = ballsArray[i, j].transform.position;
-                    explosion.SetTrigger("Enable");
+                    Explosion explosion = explosionQueue.Dequeue();
+                    explosion.PlayAnimationBlowUp(ballsArray[i, j].transform.position);
                     explosionQueue.Enqueue(explosion);
 
-                    Ball bufBall = ballsArray[i, j];
                     for (int q = j; q < ySize - 1; q++)
                     {
                         ballsArray[i, q] = ballsArray[i, q + 1];
@@ -109,7 +111,7 @@ public class Board : MonoBehaviour
         }
     }
 
-    private void FindAllMatch(Ball ball)
+    private int FindAllMatch(Ball ball)
     {
         List<Ball> matchBalls = new List<Ball>();
 
@@ -122,6 +124,8 @@ public class Board : MonoBehaviour
         {
             matchBalls.AddRange(FindMatch(ball, dirRayMatch[i]));
         }
+
+        return matchBalls.Count; 
     }
 
     private List<Ball> FindMatch(Ball ball, Vector2 dir)
