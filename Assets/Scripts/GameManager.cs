@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     private int currentScore = 0;
     private int currentRemainingMotions = 0;
     private string scoreStr = "Очки: ";
-    private string motionsStr = "Очки: ";
+    private string motionsStr = "Шаги: ";
 
     // Start is called before the first frame update
     void Start()
