@@ -1,18 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIView : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public Text scoreText;
+    public Text motionsText;
+    private string scoreStr = "Очки: ";
+    private string motionsStr = "Шаги: ";
+    private int digitsNumber = 4;
+
+    public void SetScoreAndMotionsText(int score, int motions)
     {
-        
+        scoreText.text = scoreStr + score.ToString("D" + digitsNumber.ToString());
+        motionsText.text = motionsStr + motions.ToString("D" + digitsNumber.ToString());
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SetResultText(Text resultText)
     {
-        
+        resultText.text = scoreText.text.Substring(scoreStr.Length, digitsNumber);
     }
 }
