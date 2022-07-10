@@ -1000,7 +1000,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1762183490}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: GameController, Assembly-CSharp
         m_MethodName: TakeScore
         m_Mode: 0
         m_Arguments:
@@ -1418,7 +1418,7 @@ GameObject:
   - component: {fileID: 1762183489}
   - component: {fileID: 1762183490}
   m_Layer: 0
-  m_Name: Game Manager
+  m_Name: Game Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1447,7 +1447,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1762183488}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea2ab25ad54b075428b1aeaf20e03a21, type: 3}
+  m_Script: {fileID: 11500000, guid: c300fdc742f8c9548ac626912518e222, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   maxActionsNumber: 20
@@ -1466,7 +1466,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  onEndGameEvent:
+  onSimpeEndGame:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1412220417}
@@ -1504,6 +1504,21 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 1
+        m_CallState: 2
+  onRecordEndGame:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 171800280}
+        m_TargetAssemblyTypeName: UIController, Assembly-CSharp
+        m_MethodName: LoadScene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: RecordsTable
+          m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &1765270494
 GameObject:

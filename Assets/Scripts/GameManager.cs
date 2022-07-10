@@ -3,33 +3,44 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public int maxActionsNumber = 10;
-    public UnityEvent<int, int> onUpdateDataEvent;
-    public UnityEvent onEndGameEvent;
+    public static GameManager instance;
+    public static SaveData.RecordsList recordsList;
+    public static TextAsset defaultRecords;
+    public static int newRecordIndex = -1;
 
-    private int currentScore = 0;
-    private int currentRemainingMotions = 0;
-
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        currentScore = 0;
-        currentRemainingMotions = maxActionsNumber;
-        onUpdateDataEvent.Invoke(currentScore, currentRemainingMotions);
+        if (!instance)
+        {
+            instance = this;
+            LoadRecordsList();
+            SceneManager.sceneLoaded += this.OnLoadCallback;
+            DontDestroyOnLoad(transform.gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
-    public void TakeScore(int matchCount)
+    void OnLoadCallback(Scene scene, LoadSceneMode sceneMode)
     {
-        currentRemainingMotions--;
-        currentScore += matchCount < 3 ? 1 : matchCount - 1;
-        onUpdateDataEvent.Invoke(currentScore, currentRemainingMotions);
+    }
 
-        if (currentRemainingMotions <= 0)
+    public void LoadRecordsList()
+    {
+        if (SaveManager.FindPP(SaveData.RecordsList.KEY))
         {
-            onEndGameEvent.Invoke();
+            recordsList = SaveManager.LoadPP<SaveData.RecordsList>(SaveData.RecordsList.KEY);
+        }
+        else
+        {
+            recordsList = new SaveData.RecordsList(defaultRecords.text);
+            SaveManager.SavePP<SaveData.RecordsList>(SaveData.RecordsList.KEY, recordsList);
         }
     }
 }
