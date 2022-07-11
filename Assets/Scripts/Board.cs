@@ -10,7 +10,6 @@ public class Board : MonoBehaviour
     public int xSize = 2, ySize = 2;
     public GameObject explosionPrefab;
     public Ball ballPrefab;
-    public List<Sprite> ballSprites;
     public UnityEvent<int> onMatchEvent;
 
     [HideInInspector]
@@ -22,6 +21,12 @@ public class Board : MonoBehaviour
     private static readonly Vector2[] dirRayMatch = new Vector2[4] { Vector2.up, Vector2.down, Vector2.right, Vector2.left };
     private Ball[,] ballsArray;
     private Queue<Explosion> explosionQueue;
+    private List<Sprite> ballSprites;
+
+    private void Awake()
+    {
+        ballSprites = GameManager.instance.selectedPack.spriteList;
+    }
 
     public void CreateBoard()
     {

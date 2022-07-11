@@ -9,13 +9,15 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
     public static SaveData.RecordsList recordsList;
-    public static TextAsset defaultRecords;
+    public const string defaultRecords = "initializing records list";
     public static int newRecordIndex = -1;
+    public StickerPack selectedPack;
 
     void Awake()
     {
         if (!instance)
         {
+            PlayerPrefs.DeleteKey("RECORDS");
             instance = this;
             LoadRecordsList();
             SceneManager.sceneLoaded += this.OnLoadCallback;
@@ -39,7 +41,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            recordsList = new SaveData.RecordsList(defaultRecords.text);
+            recordsList = new SaveData.RecordsList(defaultRecords);
             SaveManager.SavePP<SaveData.RecordsList>(SaveData.RecordsList.KEY, recordsList);
         }
     }
