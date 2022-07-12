@@ -9,7 +9,6 @@ namespace SaveData
     public class RecordsList
     {
         public Record[] records = new Record[10]; //по возрастанию
-        public const string KEY = "RECORDS";
 
         public RecordsList() { }
 

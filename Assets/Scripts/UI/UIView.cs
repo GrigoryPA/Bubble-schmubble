@@ -21,4 +21,9 @@ public class UIView : MonoBehaviour
     {
         resultText.text = scoreText.text.Substring(scoreStr.Length, digitsNumber);
     }
+
+    public void SetResultMoneyText(Text resultText)
+    {
+        resultText.text = "+" + GameManager.cashAccount.money.ToString();
+    }
 } 

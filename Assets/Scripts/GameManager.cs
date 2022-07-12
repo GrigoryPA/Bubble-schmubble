@@ -9,17 +9,24 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
     public static SaveData.RecordsList recordsList;
-    public const string defaultRecords = "initializing records list";
     public static int newRecordIndex = -1;
+    public static SaveData.CashAccount cashAccount;
+
     public StickerPack selectedPack;
+
+    public const string RECORDS_KEY = "RECORDS";
+    public const string DEFAULT_RECORDS = "initializing records list";
+    public const string CASH_ACCOUNT_KEY = "CASH_ACCOUNT";
+    public const string START_CASH = "start cash account";
 
     void Awake()
     {
         if (!instance)
         {
-            PlayerPrefs.DeleteKey("RECORDS");
             instance = this;
             LoadRecordsList();
+            LoadCashAccount();
+
             SceneManager.sceneLoaded += this.OnLoadCallback;
             DontDestroyOnLoad(transform.gameObject);
         }
@@ -33,16 +40,31 @@ public class GameManager : MonoBehaviour
     {
     }
 
-    public void LoadRecordsList()
+    public static void LoadRecordsList()
     {
-        if (SaveManager.FindPP(SaveData.RecordsList.KEY))
+        if (SaveManager.FindPP(RECORDS_KEY))
         {
-            recordsList = SaveManager.LoadPP<SaveData.RecordsList>(SaveData.RecordsList.KEY);
+            recordsList = SaveManager.LoadPP<SaveData.RecordsList>(RECORDS_KEY);
         }
         else
         {
-            recordsList = new SaveData.RecordsList(defaultRecords);
-            SaveManager.SavePP<SaveData.RecordsList>(SaveData.RecordsList.KEY, recordsList);
+            recordsList = new SaveData.RecordsList(DEFAULT_RECORDS);
+            SaveManager.SavePP<SaveData.RecordsList>(RECORDS_KEY, recordsList);
         }
     }
+
+    public static void LoadCashAccount()
+    {
+        if (SaveManager.FindPP(CASH_ACCOUNT_KEY))
+        {
+            cashAccount = SaveManager.LoadPP<SaveData.CashAccount>(CASH_ACCOUNT_KEY);
+        }
+        else
+        {
+            cashAccount = new SaveData.CashAccount(START_CASH);
+            SaveManager.SavePP<SaveData.CashAccount>(CASH_ACCOUNT_KEY, cashAccount);
+        }
+    }
+
+    public static void SaveCashAccount() => SaveManager.SavePP<SaveData.CashAccount>(CASH_ACCOUNT_KEY, cashAccount);
 }

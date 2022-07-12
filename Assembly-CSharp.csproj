@@ -57,19 +57,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\SaveData\Record.cs" />
+    <Compile Include="Assets\Scripts\StickerPackController.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
-    <Compile Include="Assets\Scripts\BoardController.cs" />
+    <Compile Include="Assets\Scripts\Match3 Game\BoardController.cs" />
     <Compile Include="Assets\Scripts\UI\RecordsView.cs" />
-    <Compile Include="Assets\Scripts\Board.cs" />
+    <Compile Include="Assets\Scripts\Match3 Game\Board.cs" />
+    <Compile Include="Assets\Scripts\Scriptable Objects\StickerPack.cs" />
     <Compile Include="Assets\Scripts\SaveData\SaveManager.cs" />
-    <Compile Include="Assets\Scripts\GameController.cs" />
-    <Compile Include="Assets\Scripts\Ball.cs" />
-    <Compile Include="Assets\Scripts\Explosion.cs" />
+    <Compile Include="Assets\Scripts\Match3 Game\GameController.cs" />
+    <Compile Include="Assets\Scripts\Match3 Game\Ball.cs" />
+    <Compile Include="Assets\Scripts\Match3 Game\Explosion.cs" />
     <Compile Include="Assets\Scripts\UI\UIController.cs" />
     <Compile Include="Assets\Scripts\SaveData\RecordsList.cs" />
     <Compile Include="Assets\Scripts\UI\UIView.cs" />
-    <Compile Include="Assets\Scripts\SaveData\StickerPack.cs" />
-    <Compile Include="Assets\Scripts\UI\StickerPackController.cs" />
+    <Compile Include="Assets\Scripts\UI\ScrollViewCollectionsController.cs" />
+    <Compile Include="Assets\Scripts\SaveData\CashAccount.cs" />
+    <Compile Include="Assets\Scripts\UI\CashView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
