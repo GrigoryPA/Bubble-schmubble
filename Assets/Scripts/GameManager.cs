@@ -11,13 +11,17 @@ public class GameManager : MonoBehaviour
     public static SaveData.RecordsList recordsList;
     public static int newRecordIndex = -1;
     public static SaveData.CashAccount cashAccount;
+    public static List<StickerPack> allStickerPacks;
+    public static SaveData.PurchasedAssets purchasedAssets;
 
     public StickerPack selectedPack;
-
+    
     public const string RECORDS_KEY = "RECORDS";
-    public const string DEFAULT_RECORDS = "initializing records list";
     public const string CASH_ACCOUNT_KEY = "CASH_ACCOUNT";
-    public const string START_CASH = "start cash account";
+    public const string PURCHASED_ASSETS_KEY = "PURCHASED_ASSETS";
+
+    private const string DEFAULT_RECORDS = "initializing records list";
+    private const string START_CASH = "start cash account";
 
     void Awake()
     {
@@ -26,6 +30,8 @@ public class GameManager : MonoBehaviour
             instance = this;
             LoadRecordsList();
             LoadCashAccount();
+            LoadStickerPacksResource();
+            LoadPurchasedAssets();
 
             SceneManager.sceneLoaded += this.OnLoadCallback;
             DontDestroyOnLoad(transform.gameObject);
@@ -35,6 +41,11 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    /*private void OnDestroy()
+    {
+        PlayerPrefs.DeleteKey(PURCHASED_ASSETS_KEY);
+    }*/
 
     void OnLoadCallback(Scene scene, LoadSceneMode sceneMode)
     {
@@ -67,4 +78,24 @@ public class GameManager : MonoBehaviour
     }
 
     public static void SaveCashAccount() => SaveManager.SavePP<SaveData.CashAccount>(CASH_ACCOUNT_KEY, cashAccount);
+
+    public static void LoadPurchasedAssets()
+    {
+        if (SaveManager.FindPP(PURCHASED_ASSETS_KEY))
+        {
+            purchasedAssets = SaveManager.LoadPP<SaveData.PurchasedAssets>(PURCHASED_ASSETS_KEY);
+        }
+        else
+        {
+            purchasedAssets = new SaveData.PurchasedAssets(instance.selectedPack);
+            SaveManager.SavePP<SaveData.PurchasedAssets>(PURCHASED_ASSETS_KEY, purchasedAssets);
+        }
+    }
+
+    public static void SavePurchasedAssets() => SaveManager.SavePP<SaveData.PurchasedAssets>(PURCHASED_ASSETS_KEY, purchasedAssets);
+
+    public static void LoadStickerPacksResource()
+    {
+        allStickerPacks = new List<StickerPack>(Resources.LoadAll<StickerPack>("Sticker Packs"));
+    }
 }

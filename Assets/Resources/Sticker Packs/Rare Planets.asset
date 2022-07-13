@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3916259d15be2045bb807339a61b956, type: 3}
+  m_Name: Rare Planets
+  m_EditorClassIdentifier: 
+  mainIcon: {fileID: 7501557443856019538, guid: 34b2643ca52bc6b428585400b42ee156, type: 3}
+  spriteList:
+  - {fileID: -2419764413493369297, guid: 34b2643ca52bc6b428585400b42ee156, type: 3}
+  - {fileID: 1737312000958490015, guid: 34b2643ca52bc6b428585400b42ee156, type: 3}
+  - {fileID: 6495464288226304558, guid: 34b2643ca52bc6b428585400b42ee156, type: 3}
+  - {fileID: 7501557443856019538, guid: 34b2643ca52bc6b428585400b42ee156, type: 3}
+  - {fileID: -3374074315818320190, guid: 34b2643ca52bc6b428585400b42ee156, type: 3}

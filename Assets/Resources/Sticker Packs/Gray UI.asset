@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3916259d15be2045bb807339a61b956, type: 3}
+  m_Name: Gray UI
+  m_EditorClassIdentifier: 
+  mainIcon: {fileID: 21300000, guid: 8ba589f5ec399d04889c7b2920fa9cf1, type: 3}
+  spriteList:
+  - {fileID: 21300000, guid: 9e4dffe4c7972004292137cfdbc281dc, type: 3}
+  - {fileID: 21300000, guid: 0581558c401f7894192611d47e13c678, type: 3}
+  - {fileID: 21300000, guid: baea042c6fce11643924802fc8d051da, type: 3}
+  - {fileID: 21300000, guid: 8ba589f5ec399d04889c7b2920fa9cf1, type: 3}
+  - {fileID: 21300000, guid: d7cdabceebfadc546a7d94d48e647707, type: 3}

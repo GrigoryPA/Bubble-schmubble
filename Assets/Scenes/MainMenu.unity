@@ -504,7 +504,7 @@ PrefabInstance:
       objectReference: {fileID: 2028358259}
     - target: {fileID: 5254651125839044132, guid: b00b098f4f0ca414498bd1030e7824f3, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
-      value: Collections
+      value: Collection
       objectReference: {fileID: 0}
     - target: {fileID: 5254651125839044133, guid: b00b098f4f0ca414498bd1030e7824f3, type: 3}
       propertyPath: m_Pivot.x
@@ -592,7 +592,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5254651126447165588, guid: b00b098f4f0ca414498bd1030e7824f3, type: 3}
       propertyPath: m_Text
-      value: "\u041A\u043E\u043B\u043B\u0435\u043A\u0446\u0438\u0438"
+      value: "\u041A\u043E\u043B\u043B\u0435\u043A\u0446\u0438\u044F"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b00b098f4f0ca414498bd1030e7824f3, type: 3}
@@ -832,7 +832,7 @@ PrefabInstance:
     - target: {fileID: 3514175475392407148, guid: eb754f530a7f4cb4494d42700ef4157f, type: 3}
       propertyPath: selectedPack
       value: 
-      objectReference: {fileID: 11400000, guid: ec47e3b41ccadd749a35a23bc20427cd, type: 2}
+      objectReference: {fileID: 11400000, guid: ed3f3f7be0cf4fa47886ba67345066f6, type: 2}
     - target: {fileID: 3514175475392407149, guid: eb754f530a7f4cb4494d42700ef4157f, type: 3}
       propertyPath: m_RootOrder
       value: 3
