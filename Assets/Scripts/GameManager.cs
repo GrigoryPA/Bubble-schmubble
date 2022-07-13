@@ -42,10 +42,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    /*private void OnDestroy()
-    {
-        PlayerPrefs.DeleteKey(PURCHASED_ASSETS_KEY);
-    }*/
+    //private void OnDestroy()
+    //{
+    //    PlayerPrefs.DeleteKey(PURCHASED_ASSETS_KEY);
+    //}
 
     void OnLoadCallback(Scene scene, LoadSceneMode sceneMode)
     {
@@ -87,7 +87,9 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            purchasedAssets = new SaveData.PurchasedAssets(instance.selectedPack);
+            purchasedAssets = new SaveData.PurchasedAssets(allStickerPacks[0]);
+            purchasedAssets.purchasedStickerPacks.Add(allStickerPacks[1]);
+            purchasedAssets.purchasedStickerPacks.Add(allStickerPacks[2]);
             SaveManager.SavePP<SaveData.PurchasedAssets>(PURCHASED_ASSETS_KEY, purchasedAssets);
         }
     }
