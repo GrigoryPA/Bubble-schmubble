@@ -23,7 +23,7 @@ public class GameController : MonoBehaviour
 
     public void TakeMoney()
     {
-        GameManager.cashAccount.money = currentScore;
+        GameManager.cashAccount.money += currentScore;
         GameManager.SaveCashAccount();
     }
 
@@ -53,5 +53,13 @@ public class GameController : MonoBehaviour
                 onSimpeEndGame.Invoke();
             }
         }
+    }
+
+    public void ContinueGame(int motions)
+    {
+        GameManager.cashAccount.money -= currentScore;
+        GameManager.SaveCashAccount();
+
+        currentRemainingMotions += motions;
     }
 }
