@@ -63,6 +63,7 @@
     <Compile Include="Assets\Scripts\SaveData\PurchasedAssets.cs" />
     <Compile Include="Assets\Scripts\UI\RecordsView.cs" />
     <Compile Include="Assets\Scripts\Match3 Game\Board.cs" />
+    <Compile Include="Assets\Scripts\UI\PurchasePanelView.cs" />
     <Compile Include="Assets\Scripts\Scriptable Objects\StickerPack.cs" />
     <Compile Include="Assets\Scripts\SaveData\SaveManager.cs" />
     <Compile Include="Assets\Scripts\SaveData\CashAccount.cs" />
@@ -74,7 +75,8 @@
     <Compile Include="Assets\Scripts\UI\UIController.cs" />
     <Compile Include="Assets\Scripts\SaveData\RecordsList.cs" />
     <Compile Include="Assets\Scripts\UI\UIView.cs" />
-    <Compile Include="Assets\Scripts\UI\PurchasePanelView.cs" />
+    <Compile Include="Assets\Scripts\AdsInitializer.cs" />
+    <Compile Include="Assets\Scripts\InterstitialAds.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -724,6 +726,15 @@
     </Reference>
     <Reference Include="Unity.2D.SpriteShape.Runtime">
       <HintPath>Library\ScriptAssemblies\Unity.2D.SpriteShape.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Monetization">
+      <HintPath>Library\ScriptAssemblies\UnityEngine.Monetization.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Advertisements">
+      <HintPath>Library\ScriptAssemblies\UnityEngine.Advertisements.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Advertisements.Editor">
+      <HintPath>Library\ScriptAssemblies\UnityEngine.Advertisements.Editor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

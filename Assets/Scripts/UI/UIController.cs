@@ -10,6 +10,11 @@ public class UIController : MonoBehaviour
         SceneManager.LoadScene(loadSceneName, LoadSceneMode.Single);
     }
 
+    public void LoadSceneWithAds(string loadSceneName)
+    {
+        SceneManager.LoadScene(loadSceneName, LoadSceneMode.Single);
+    }
+
     public void CallApplicationQuit()
     {
         Application.Quit();

@@ -33,9 +33,6 @@ public class GameManager : MonoBehaviour
             LoadStickerPacksResource();
             LoadPurchasedAssets();
 
-            foreach (var v in purchasedAssets.purchasedStickerPacks)
-                print(v.name);
-
             SceneManager.sceneLoaded += this.OnLoadCallback;
             DontDestroyOnLoad(transform.gameObject);
         }
@@ -44,11 +41,6 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
-    //private void OnDestroy()
-    //{
-    //    PlayerPrefs.DeleteKey(PURCHASED_ASSETS_KEY);
-    //}
 
     void OnLoadCallback(Scene scene, LoadSceneMode sceneMode)
     {
@@ -86,15 +78,11 @@ public class GameManager : MonoBehaviour
     {
         if (SaveManager.FindPP(PURCHASED_ASSETS_KEY))
         {
-            print("purchased from pp");
             purchasedAssets = SaveManager.LoadPP<SaveData.PurchasedAssets>(PURCHASED_ASSETS_KEY);
         }
         else
         {
-            print("purchased from default");
-            purchasedAssets = new SaveData.PurchasedAssets(allStickerPacks[0]);
-            purchasedAssets.purchasedStickerPacks.Add(allStickerPacks[1]);
-            purchasedAssets.purchasedStickerPacks.Add(allStickerPacks[2]);
+            purchasedAssets = new SaveData.PurchasedAssets(instance.selectedPack);
             SaveManager.SavePP<SaveData.PurchasedAssets>(PURCHASED_ASSETS_KEY, purchasedAssets);
         }
     }
