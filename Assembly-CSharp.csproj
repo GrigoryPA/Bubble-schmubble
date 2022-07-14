@@ -68,12 +68,13 @@
     <Compile Include="Assets\Scripts\SaveData\CashAccount.cs" />
     <Compile Include="Assets\Scripts\Match3 Game\GameController.cs" />
     <Compile Include="Assets\Scripts\Match3 Game\Ball.cs" />
+    <Compile Include="Assets\Scripts\UI\StoreItem.cs" />
     <Compile Include="Assets\Scripts\UI\CashView.cs" />
     <Compile Include="Assets\Scripts\Match3 Game\Explosion.cs" />
     <Compile Include="Assets\Scripts\UI\UIController.cs" />
     <Compile Include="Assets\Scripts\SaveData\RecordsList.cs" />
     <Compile Include="Assets\Scripts\UI\UIView.cs" />
-    <Compile Include="Assets\Scripts\UI\StoreItem.cs" />
+    <Compile Include="Assets\Scripts\UI\PurchasePanelView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

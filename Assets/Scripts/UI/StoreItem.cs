@@ -7,7 +7,10 @@ using UnityEngine.Events;
 public class StoreItem : MonoBehaviour
 {
     public List<StickerPack> poolItems;
-    public GameObject purchasePanel;
+    //public PurchasePanelView purchasePanel;
+    public Text infoText;
+    [Multiline(10)]
+    public string info;
     [Header("Buying with money")]
     public Button moneyButton;
     public int moneyCost;
@@ -22,6 +25,8 @@ public class StoreItem : MonoBehaviour
 
     private void Awake()
     {
+        infoText.text = info;
+
         moneyButton.interactable = GameManager.cashAccount.money >= moneyCost;
         moneyButton.GetComponentInChildren<Text>().text = moneyCost.ToString();
         moneyButton.onClick.AddListener(SpendMoney);

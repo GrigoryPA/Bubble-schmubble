@@ -8,6 +8,7 @@ namespace SaveData
     [System.Serializable]
     public class PurchasedAssets
     {
+        [SerializeField]
         public List<StickerPack> purchasedStickerPacks;
 
         public PurchasedAssets() { }
