@@ -14,7 +14,7 @@ public class RewardedAds : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowLi
     [Space]
     [Space]
     public int countShows = 0;
-    public UnityEvent OnShowCompleted;
+    public UnityEvent onShowCompleted;
 
     private string adID;
 
@@ -58,7 +58,6 @@ public class RewardedAds : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowLi
 
     public void OnUnityAdsFailedToLoad(string placementId, UnityAdsLoadError error, string message)
     {
-        //print("OnUnityAdsFailedToLoad");
         //throw new System.NotImplementedException();
     }
 
@@ -90,7 +89,7 @@ public class RewardedAds : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowLi
             //«десь даем награду за рекламу
 
             //«апускаем событие окончани€ просмотра рекламы
-            OnShowCompleted.Invoke();
+            onShowCompleted.Invoke();
 
             //сразу же пытаемс€ подгрузить на вс€кий случай следующую рекламу
             LoadAd();

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Advertisements;
+using UnityEngine.Events;
 
 public class InterstitialAds : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowListener
 {
@@ -12,22 +13,23 @@ public class InterstitialAds : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsSh
     [Space]
     [Space]
     public bool isShowingOnStart = false;
+    public UnityEvent onShowCompleted;
 
     private void Awake()
     {
         adID = (Application.platform == RuntimePlatform.IPhonePlayer) ? iOSAdID : androidAdID;
-        LoadAd();
     }
 
-    private void Start()
+    private void OnEnable()
     {
+        LoadAd();
         if (isShowingOnStart)
         {
             ShowAd();
         }
     }
 
-    private void LoadAd()
+    public void LoadAd()
     {
         Advertisement.Load(adID, this);
     }
@@ -73,6 +75,7 @@ public class InterstitialAds : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsSh
 
     public void OnUnityAdsShowComplete(string placementId, UnityAdsShowCompletionState showCompletionState)
     {
+        onShowCompleted.Invoke();
         LoadAd();
     }
 }

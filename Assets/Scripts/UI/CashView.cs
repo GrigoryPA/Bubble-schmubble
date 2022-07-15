@@ -8,7 +8,7 @@ public class CashView : MonoBehaviour
     public Text moneyText;
     public Text crystalText;
 
-    private void Start()
+    private void Update()
     {
         moneyText.text = GameManager.cashAccount.money.ToString();
         crystalText.text = GameManager.cashAccount.crystal.ToString();

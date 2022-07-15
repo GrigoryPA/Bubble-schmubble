@@ -23,6 +23,8 @@ public class StoreItem : MonoBehaviour
 
     public UnityEvent OnPurchaseStarted;
 
+    private RewardedAds rewardedVideo;
+
     private void Awake()
     {
         infoText.text = info;
@@ -35,8 +37,10 @@ public class StoreItem : MonoBehaviour
         crystalButton.GetComponentInChildren<Text>().text = crystalCost.ToString();
         crystalButton.onClick.AddListener(SpendCrystal);
 
-
-        videoButton.GetComponentInChildren<Text>().text = videoCost.ToString();
+        rewardedVideo = videoButton.GetComponent<RewardedAds>();
+        rewardedVideo.onShowCompleted.AddListener(TakeShowedVideo);
+        rewardedVideo.countShows = videoCost;
+        videoButton.GetComponentInChildren<Text>().text = (videoCost - rewardedVideo.countShows).ToString() + "/" + videoCost.ToString();
     }
 
     public void SpendMoney()
@@ -49,5 +53,16 @@ public class StoreItem : MonoBehaviour
     {
         GameManager.cashAccount.crystal -= crystalCost;
         OnPurchaseStarted.Invoke();
+    }
+
+    public void TakeShowedVideo()
+    {
+        if (rewardedVideo.countShows <= 0) //нужное кол=во просмотров достигнуто
+        {
+            rewardedVideo.countShows = videoCost;
+            OnPurchaseStarted.Invoke();
+        }
+
+        videoButton.GetComponentInChildren<Text>().text = (videoCost - rewardedVideo.countShows).ToString() + "/" + videoCost.ToString();
     }
 }
