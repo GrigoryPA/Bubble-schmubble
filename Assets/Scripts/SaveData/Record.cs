@@ -30,7 +30,7 @@ namespace SaveData
 
         public string DateTimeToString()
         {
-            return date.ToString("MM/dd/yyyy") + " " + date.ToString("hh:mm:ss");
+            return date.ToString("dd/MM/yyyy") + " " + date.ToString("hh:mm:ss");
         }
 
         public override string ToString()

@@ -6,6 +6,7 @@ using UnityEngine.Events;
 
 public class ScrollViewCollectionsController : MonoBehaviour
 {
+    public int width;
     public GameObject itemPrefab;
     public GameObject content;
     public Color normalColor;
@@ -19,6 +20,7 @@ public class ScrollViewCollectionsController : MonoBehaviour
     private void Awake()
     {
         items = new Dictionary<GameObject, StickerPack>(GameManager.allStickerPacks.Count);
+        SetContentSize();
 
         InitItem(ref itemPrefab, 0, GameManager.allStickerPacks[0]);//проинициализировали первый обхект образец, чтобы его использовать
         items.Add(itemPrefab, GameManager.allStickerPacks[0]);
@@ -43,13 +45,16 @@ public class ScrollViewCollectionsController : MonoBehaviour
         OnValueChanged.AddListener(ApplySelectionToGameManager);
     }
 
-    private void InitItem(ref GameObject newItem, int kefPosX, StickerPack stickerPack)
+    private void InitItem(ref GameObject newItem, int pos, StickerPack stickerPack)
     {
-        newItem.name = newItem.name + " " + kefPosX.ToString();
+        newItem.name = newItem.name + " " + pos.ToString();
 
         //ставим объект колекции в нужное место
+        RectTransform contentRT = content.GetComponent<RectTransform>();
         RectTransform itemT = newItem.GetComponent<RectTransform>();
-        itemT.localPosition = new Vector3(kefPosX * itemT.rect.width, -(itemT.pivot.y * itemT.rect.height), itemT.localPosition.z);
+        itemT.localPosition = new Vector3((pos % width) * itemT.rect.width - contentRT.pivot.x*contentRT.rect.width,
+                                        -(itemT.pivot.y * itemT.rect.height) * (pos / width), 
+                                        itemT.localPosition.z);
         
         //выставляем окнку для коллекции
         Image itemI = newItem.GetComponentInChildren<Image>();
@@ -58,12 +63,13 @@ public class ScrollViewCollectionsController : MonoBehaviour
         //если этот набор стикеров уже приобретен
         if (GameManager.purchasedAssets.purchasedStickerPacks.Contains(stickerPack))
         {
+            newItem.GetComponentInChildren<Button>().interactable = true; //запрещаем взамиодействие
             itemI.color = normalColor; // ставим ему нормальный цвет
         }
         else
         {
-            itemI.color = unavailableColor; //ставим цвет заблокированного
             newItem.GetComponentInChildren<Button>().interactable = false; //запрещаем взамиодействие
+            itemI.color = unavailableColor; //ставим цвет заблокированного
         }
     }
 
@@ -96,5 +102,25 @@ public class ScrollViewCollectionsController : MonoBehaviour
     public void ApplySelectionToGameManager(GameObject obj)
     {
         GameManager.instance.selectedPack = items[selectedItem];
+    }
+
+    public static void SetSize(RectTransform trans, Vector2 newSize)
+    {
+        Vector2 oldSize = trans.rect.size;
+        Vector2 deltaSize = newSize - oldSize;
+        trans.offsetMin = trans.offsetMin - new Vector2(deltaSize.x * trans.pivot.x, deltaSize.y * trans.pivot.y);
+        trans.offsetMax = trans.offsetMax + new Vector2(deltaSize.x * (1f - trans.pivot.x), deltaSize.y * (1f - trans.pivot.y));
+    }
+
+    public void SetContentSize()
+    {
+        //РЕДАЧИМ РАЗМЕР ПАНЕЛИ КОНТЕНТА
+        RectTransform contentRT = content.GetComponent<RectTransform>();
+        RectTransform itemT = itemPrefab.GetComponent<RectTransform>();
+
+        int kX = width;
+        int kY = Mathf.CeilToInt(((float)GameManager.allStickerPacks.Count) / ((float)width));
+        Vector2 newSize = new Vector2(kX, kY) * itemT.rect.size;
+        SetSize(contentRT, newSize);
     }
 }

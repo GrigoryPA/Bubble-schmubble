@@ -8,7 +8,7 @@ namespace SaveData
     [System.Serializable]
     public class RecordsList
     {
-        public Record[] records = new Record[10]; //по возрастанию
+        public Record[] records = new Record[7]; //по возрастанию
 
         public RecordsList() { }
 

@@ -78,6 +78,7 @@
     <Compile Include="Assets\Scripts\UI\UIController.cs" />
     <Compile Include="Assets\Scripts\SaveData\RecordsList.cs" />
     <Compile Include="Assets\Scripts\UI\UIView.cs" />
+    <Compile Include="Assets\Scripts\UI\BackgroundView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

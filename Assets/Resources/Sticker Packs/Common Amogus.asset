@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3916259d15be2045bb807339a61b956, type: 3}
+  m_Name: Common Amogus
+  m_EditorClassIdentifier: 
+  mainIcon: {fileID: 104203996262716963, guid: 3f03613f67c0ad740baf0f7d9cc06a85, type: 3}
+  spriteList:
+  - {fileID: 104203996262716963, guid: 3f03613f67c0ad740baf0f7d9cc06a85, type: 3}
+  - {fileID: -564058672451576236, guid: 456136e9c7ed86449bfbfb961ad95888, type: 3}
+  - {fileID: -906363532312414310, guid: 3c983078990a1a34996ff8b36219058e, type: 3}
+  - {fileID: 2493058777950508904, guid: 9c58e39a3e1f52340b7b19ea7b47f1b5, type: 3}
+  - {fileID: 4866303001020565970, guid: c3c18fc216c2a434cbe4b507c42fb0d3, type: 3}
+  - {fileID: 7164205680352207324, guid: 0b80622abd12eef4ab90e06e66c4ab41, type: 3}

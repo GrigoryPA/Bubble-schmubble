@@ -28,12 +28,11 @@ public class StoreItem : MonoBehaviour
     private void Awake()
     {
         infoText.text = info;
+        UpdateButtonsInteraction();
 
-        moneyButton.interactable = GameManager.cashAccount.money >= moneyCost;
         moneyButton.GetComponentInChildren<Text>().text = moneyCost.ToString();
         moneyButton.onClick.AddListener(SpendMoney);
 
-        crystalButton.interactable = GameManager.cashAccount.crystal >= crystalCost;
         crystalButton.GetComponentInChildren<Text>().text = crystalCost.ToString();
         crystalButton.onClick.AddListener(SpendCrystal);
 
@@ -43,15 +42,23 @@ public class StoreItem : MonoBehaviour
         videoButton.GetComponentInChildren<Text>().text = (videoCost - rewardedVideo.countShows).ToString() + "/" + videoCost.ToString();
     }
 
+    private void UpdateButtonsInteraction()
+    {
+        moneyButton.interactable = GameManager.cashAccount.money >= moneyCost;
+        crystalButton.interactable = GameManager.cashAccount.crystal >= crystalCost;
+    }
+
     public void SpendMoney()
     {
         GameManager.cashAccount.money -= moneyCost;
+        UpdateButtonsInteraction();
         OnPurchaseStarted.Invoke();
     }
 
     public void SpendCrystal()
     {
         GameManager.cashAccount.crystal -= crystalCost;
+        UpdateButtonsInteraction();
         OnPurchaseStarted.Invoke();
     }
 
