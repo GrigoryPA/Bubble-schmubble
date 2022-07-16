@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\SaveData\Record.cs" />
+    <Compile Include="Assets\Scripts\UI\BackgroundView.cs" />
     <Compile Include="Assets\Scripts\Ads\AdsInitializer.cs" />
     <Compile Include="Assets\Scripts\UI\ScrollViewCollectionsController.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
@@ -78,7 +79,7 @@
     <Compile Include="Assets\Scripts\UI\UIController.cs" />
     <Compile Include="Assets\Scripts\SaveData\RecordsList.cs" />
     <Compile Include="Assets\Scripts\UI\UIView.cs" />
-    <Compile Include="Assets\Scripts\UI\BackgroundView.cs" />
+    <Compile Include="Assets\Scripts\Jumper Game\JumperController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
