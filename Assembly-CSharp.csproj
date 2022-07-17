@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\UI\RecordsView.cs" />
     <Compile Include="Assets\Scripts\Match3 Game\Board.cs" />
     <Compile Include="Assets\Scripts\UI\PurchasePanelView.cs" />
+    <Compile Include="Assets\Scripts\Jumper Game\JumperController.cs" />
     <Compile Include="Assets\Scripts\Scriptable Objects\StickerPack.cs" />
     <Compile Include="Assets\Scripts\SaveData\SaveManager.cs" />
     <Compile Include="Assets\Scripts\Ads\RewardedAds.cs" />
@@ -79,7 +80,11 @@
     <Compile Include="Assets\Scripts\UI\UIController.cs" />
     <Compile Include="Assets\Scripts\SaveData\RecordsList.cs" />
     <Compile Include="Assets\Scripts\UI\UIView.cs" />
-    <Compile Include="Assets\Scripts\Jumper Game\JumperController.cs" />
+    <Compile Include="Assets\Scripts\Flappy Game\FlappyPlayerController.cs" />
+    <Compile Include="Assets\Scripts\Jumper Game\Platform.cs" />
+    <Compile Include="Assets\Scripts\Jumper Game\Map.cs" />
+    <Compile Include="Assets\Scripts\Jumper Game\CameraFollower.cs" />
+    <Compile Include="Assets\Scripts\Jumper Game\LowerBorder.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
