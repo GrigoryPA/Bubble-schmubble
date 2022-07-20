@@ -26,4 +26,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameSelection.unity
     guid: bd58507d8c6bdc84797abfc57f622127
+  - enabled: 1
+    path: Assets/Scenes/GameJumper.unity
+    guid: c39e87ae0269a944aa6520a4552be40d
   m_configObjects: {}

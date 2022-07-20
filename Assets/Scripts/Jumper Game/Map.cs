@@ -15,33 +15,54 @@ namespace JumperGame
         public GameObject forcePlatform;
         [Range(0, 1)]
         public float chanceForcePlt;
+        [Space]
+        public GameObject movingPlatform;
+        [Range(0, 1)]
+        public float chanceMovingPlt;
 
-        private float leftBorder;
-        private float rightBorder;
-        private Queue<GameObject> simplePlatformPool;
-        private Queue<GameObject> forcePlatformPool;
+        public static float leftBorder = -3;
+        public static float rightBorder = 3;
+
+        private Dictionary<PlatformType, Queue<GameObject>> platformsPool = new Dictionary<PlatformType, Queue<GameObject>>();
         private GameObject highestPlatform;
 
-        private const int poolMaxSize = 20;
+        private const int poolMaxSize = 40;
+
+        private void Awake()
+        {
+            leftBorder = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 10)).x;
+            rightBorder = Camera.main.ScreenToWorldPoint(new Vector3(Camera.main.pixelWidth, 0, 10)).x;
+        }
 
         private void OnEnable()
         {
             //Инициализировать необходимые переменные
-            leftBorder = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 10)).x;
-            rightBorder = Camera.main.ScreenToWorldPoint(new Vector3(Camera.main.pixelWidth, 0, 10)).x;
-
-            simplePlatformPool = new Queue<GameObject>(poolMaxSize);
-            forcePlatformPool = new Queue<GameObject>(poolMaxSize);
+            platformsPool.Add(PlatformType.Simple, new Queue<GameObject>());
+            platformsPool.Add(PlatformType.Force, new Queue<GameObject>());
+            platformsPool.Add(PlatformType.Moving, new Queue<GameObject>());
+            GameObject go;
             for (int i = 0; i < poolMaxSize; i++)
             {
-                simplePlatformPool.Enqueue(Instantiate(simpleAndStartPlatform, platformHome.position, Quaternion.identity));
-                forcePlatformPool.Enqueue(Instantiate(forcePlatform, platformHome.position, Quaternion.identity));
+                go = Instantiate(simpleAndStartPlatform, platformHome.position, Quaternion.identity, transform);
+                go.name += " - " + i.ToString();
+                go.SetActive(false);
+                platformsPool[PlatformType.Simple].Enqueue(go);
+
+                go = Instantiate(forcePlatform, platformHome.position, Quaternion.identity, transform);
+                go.name += " - " + i.ToString();
+                go.SetActive(false);
+                platformsPool[PlatformType.Force].Enqueue(go);
+
+                go = Instantiate(movingPlatform, platformHome.position, Quaternion.identity, transform);
+                go.name += " - " + i.ToString();
+                go.SetActive(false);
+                platformsPool[PlatformType.Moving].Enqueue(go);
             }
 
             highestPlatform = simpleAndStartPlatform;
 
             //Подписаться на нужные события
-            lowerBorder.OnPlatformCollided.AddListener(MovePlatformToEndQueue);
+            lowerBorder.onPlatformCollided.AddListener(MovePlatformToEndQueue);
         }
 
         private void Start()
@@ -49,7 +70,7 @@ namespace JumperGame
             //ВЫСТАВИТЬ ПЛАТФОРМЫ
             //первая под игроком она же префаб, ее не двигаем
             //остальные выставляем по алгоритму рандома из видоса
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 15; i++)
             {
                 CreateNewPlatform();
             }
@@ -57,37 +78,35 @@ namespace JumperGame
 
         private void MovePlatformToEndQueue(GameObject platform)
         {
-            switch (platform.GetComponent<Platform>().type)
-            {
-                case PlatformType.simple:
-                    simplePlatformPool.Enqueue(platform.gameObject);
-                    break;
-
-                case PlatformType.force:
-                    forcePlatformPool.Enqueue(platform.gameObject);
-                    break;
-            }
+            platformsPool[platform.GetComponent<Platform>().type].Enqueue(platform);
 
             platform.transform.position = platformHome.position;
+            platform.SetActive(false);
             CreateNewPlatform();
         }
 
         private void CreateNewPlatform()
         {
             float highestY = highestPlatform.transform.position.y;
-            Vector3 rndPos = new Vector3(Random.Range(leftBorder, rightBorder), highestY + Random.Range(rangeStep.x, rangeStep.y), 0.0f); 
+            
             int rndPlt = Random.Range(0, 100);
-
             if (rndPlt < chanceForcePlt * 100) //Сильная платорма
             {
-                highestPlatform = forcePlatformPool.Dequeue();
+                highestPlatform = platformsPool[PlatformType.Force].Dequeue();
+            }
+            else if (rndPlt < (chanceForcePlt + chanceMovingPlt) * 100) //Сильная платорма
+            {
+                highestPlatform = platformsPool[PlatformType.Moving].Dequeue();
             }
             else //Обычная платформа
             {
-                highestPlatform = simplePlatformPool.Dequeue();
+                highestPlatform = platformsPool[PlatformType.Simple].Dequeue();
             }
 
+            float pltWidth = highestPlatform.GetComponent<BoxCollider2D>().size.x;
+            Vector3 rndPos = new Vector3(Random.Range(leftBorder + pltWidth / 2, rightBorder - pltWidth / 2), highestY + Random.Range(rangeStep.x, rangeStep.y), 0.0f);
             highestPlatform.transform.position = rndPos;
+            highestPlatform.SetActive(true);
         }
     }
 }
