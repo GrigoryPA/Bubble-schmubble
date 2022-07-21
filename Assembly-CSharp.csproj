@@ -72,7 +72,7 @@
     <Compile Include="Assets\Scripts\Scriptable Objects\StickerPack.cs" />
     <Compile Include="Assets\Scripts\SaveData\SaveManager.cs" />
     <Compile Include="Assets\Scripts\Ads\RewardedAds.cs" />
-    <Compile Include="Assets\Scripts\Flappy Game\FlappyPlayerController.cs" />
+    <Compile Include="Assets\Scripts\Jumper Game\Platform.cs" />
     <Compile Include="Assets\Scripts\SaveData\CashAccount.cs" />
     <Compile Include="Assets\Scripts\Match3 Game\GameController.cs" />
     <Compile Include="Assets\Scripts\Match3 Game\Ball.cs" />
@@ -84,7 +84,7 @@
     <Compile Include="Assets\Scripts\SaveData\RecordsList.cs" />
     <Compile Include="Assets\Scripts\UI\UIView.cs" />
     <Compile Include="Assets\Scripts\Jumper Game\LowerBorder.cs" />
-    <Compile Include="Assets\Scripts\Jumper Game\Platform.cs" />
+    <Compile Include="Assets\Scripts\Jumper Game\GameController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

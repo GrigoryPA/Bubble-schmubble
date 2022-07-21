@@ -7,8 +7,8 @@ public class GameController : MonoBehaviour
 {
     public int maxActionsNumber = 10;
     public UnityEvent<int, int> onUpdateDataEvent;
-    public UnityEvent onSimpeEndGame;
-    public UnityEvent onRecordEndGame;
+    public UnityEvent<int> onSimpeEndGame;
+    public UnityEvent<int> onRecordEndGame;
 
     private int currentScore = 0;
     private int currentRemainingMotions = 0;
@@ -19,18 +19,6 @@ public class GameController : MonoBehaviour
         currentScore = 0;
         currentRemainingMotions = maxActionsNumber;
         onUpdateDataEvent.Invoke(currentScore, currentRemainingMotions);
-    }
-
-    public void TakeMoney()
-    {
-        GameManager.cashAccount.money += currentScore;
-        GameManager.SaveCashAccount();
-    }
-
-    public void TakeCrystal()
-    {
-        GameManager.cashAccount.crystal++;
-        GameManager.SaveCashAccount();
     }
 
     public void TakeScore(int matchCount)
@@ -46,11 +34,11 @@ public class GameController : MonoBehaviour
             {
                 GameManager.newRecordIndex = index;
                 SaveManager.SavePP<SaveData.RecordsList>(GameManager.RECORDS_KEY, GameManager.recordsList);
-                onRecordEndGame.Invoke();
+                onRecordEndGame.Invoke(currentScore);
             }
             else
             {
-                onSimpeEndGame.Invoke();
+                onSimpeEndGame.Invoke(currentScore);
             }
         }
     }

@@ -16,17 +16,17 @@ namespace JumperGame
         private float rightBorder;
         //private float centerLine;
 
+        private void Awake()
+        {
+            rb2d = GetComponent<Rigidbody2D>();
+            rb2d.Sleep();
+        }
+
         private void OnEnable()
         {
             //Инициализировать необходимые переменные
             leftBorder = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 10)).x;
             rightBorder = Camera.main.ScreenToWorldPoint(new Vector3(Camera.main.pixelWidth, 0, 10)).x;
-            //centerLine = Camera.main.ScreenToWorldPoint(new Vector3((float)Camera.main.pixelWidth * 0.5f, 0, 10)).x;
-        }
-
-        private void Start()
-        {
-            rb2d = GetComponent<Rigidbody2D>();
         }
 
         // Update is called once per frame
@@ -45,9 +45,9 @@ namespace JumperGame
             }
         }
 
-        private void OnTriggerEnter2D(Collider2D collision)
+        public void RevivePlayer()
         {
-            Destroy(gameObject);
+            transform.position = transform.position + Vector3.up * Camera.main.ScreenToWorldPoint(new Vector3(Camera.main.pixelWidth * 0.5f, Camera.main.pixelHeight, 10)).y * 0.5f;
         }
     }
 }

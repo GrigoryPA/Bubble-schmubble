@@ -714,7 +714,7 @@ PrefabInstance:
       objectReference: {fileID: 616310090}
     - target: {fileID: 5254651125839044132, guid: b00b098f4f0ca414498bd1030e7824f3, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_StringArgument
-      value: 
+      value: GameJumper
       objectReference: {fileID: 0}
     - target: {fileID: 5254651125839044132, guid: b00b098f4f0ca414498bd1030e7824f3, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName

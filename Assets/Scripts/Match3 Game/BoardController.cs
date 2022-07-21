@@ -7,7 +7,7 @@ public class BoardController : MonoBehaviour
     public Board board;
     public bool swapMode = false;
 
-    private bool isCanInteract = true;
+    private bool isCanInteract = false;
 
     public bool IsCanInteract { get => isCanInteract; set => isCanInteract = value; }
 

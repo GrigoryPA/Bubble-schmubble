@@ -93,4 +93,21 @@ public class GameManager : MonoBehaviour
     {
         allStickerPacks = new List<StickerPack>(Resources.LoadAll<StickerPack>("Sticker Packs"));
     }
+
+    public static void TakeMoney(int money)
+    {
+        GameManager.cashAccount.money += money;
+        GameManager.SaveCashAccount();
+    }
+
+    public static void TakeCrystal()
+    {
+        GameManager.cashAccount.crystal++;
+        GameManager.SaveCashAccount();
+    }
+    public static void TakeCrystal(int crystal)
+    {
+        GameManager.cashAccount.crystal += crystal;
+        GameManager.SaveCashAccount();
+    }
 }
