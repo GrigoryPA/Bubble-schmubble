@@ -9,6 +9,8 @@ namespace JumperGame
     {
         public Transform playerT;
         public UnityEvent<int> onHeightChanged;
+        
+        private int height;
 
         private void Start()
         {
@@ -21,8 +23,13 @@ namespace JumperGame
             if (playerT.position.y > transform.position.y)
             {
                 transform.position += Vector3.up * (playerT.position.y - transform.position.y);
-                onHeightChanged.Invoke((int)transform.position.y);
+                onHeightChanged.Invoke((int)(transform.position.y + height));
             }
+        }
+
+        public void SetHeight(float limit, int kef)
+        {
+            height = kef * (int)limit;
         }
     }
 }
